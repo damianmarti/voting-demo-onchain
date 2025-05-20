@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Voting.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.0 <0.9.0;\n\ncontract Voting {\n    enum Team {\n        Millonarios,\n        IndependienteMedellin,\n        AtleticoNacional,\n        Otros\n    }\n\n    // Vote counts for each team\n    uint256[4] public votes;\n\n    // Track if an address has voted\n    mapping(address => bool) public hasVoted;\n\n    // Event emitted when a vote is cast\n    event Voted(address indexed voter, Team team);\n\n    /**\n     * Vote for your favorite team. Only costs gas.\n     * @param team The team to vote for (0: Millonarios, 1: IndependienteMedellin, 2: AtleticoNacional, 3: Otros)\n     */\n    function vote(uint8 team) external {\n        require(team < 4, \"Invalid team\");\n        require(!hasVoted[msg.sender], \"Already voted\");\n        votes[team] += 1;\n        hasVoted[msg.sender] = true;\n        emit Voted(msg.sender, Team(team));\n    }\n\n    /**\n     * Get the vote count for a specific team\n     * @param team The team index\n     */\n    function getVotes(uint8 team) external view returns (uint256) {\n        require(team < 4, \"Invalid team\");\n        return votes[team];\n    }\n\n    /**\n     * Get all vote counts\n     */\n    function getAllVotes() external view returns (uint256[4] memory) {\n        return votes;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
